@@ -154,13 +154,11 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-orange-500 selection:text-white overflow-x-hidden relative" ref={containerRef}>
-      {/* Cinematic Noise Overlay */}
-      <div className="fixed inset-0 z-[200] pointer-events-none opacity-[0.03] contrast-150 brightness-150" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-
+    <div className={`min-h-screen bg-[#050505] text-white font-sans selection:bg-${heroImageIdx === 0 ? 'orange' : 'red'}-500 selection:text-white overflow-x-hidden relative`} ref={containerRef}>
       {/* Scroll Progress Bar at the Top */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-orange-600 z-[150] origin-left"
+        className={`fixed top-0 left-0 right-0 h-1 z-[150] origin-left bg-${heroImageIdx === 0 ? 'orange' : 'red'}-600`}
+        animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}
         style={{ scaleX: scrollYProgress }}
       />
 
@@ -168,18 +166,21 @@ export default function App() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <motion.div 
           style={{ x: orb1X, y: orb1Y, filter: 'blur(150px)', rotate: bgHue }}
-          className="absolute top-0 left-0 w-[60%] h-[60%] rounded-full bg-orange-600/10" 
+          animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.1)' : 'rgba(220,38,38,0.1)' }}
+          className="absolute top-0 left-0 w-[60%] h-[60%] rounded-full" 
         />
         <motion.div 
           style={{ x: orb2X, y: orb2Y, filter: 'blur(120px)' }}
-          className="absolute bottom-0 right-0 w-[50%] h-[50%] rounded-full bg-red-600/10" 
+          animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(220,38,38,0.1)' : 'rgba(234,88,12,0.1)' }}
+          className="absolute bottom-0 right-0 w-[50%] h-[50%] rounded-full" 
         />
         <motion.div 
           style={{ 
             opacity: useTransform(smoothYProgress, [0.4, 0.6, 0.8], [0, 1, 0]),
             scale: useTransform(smoothYProgress, [0.4, 0.8], [0.8, 1.2]) 
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full bg-orange-500/[0.03] blur-[100px]" 
+          animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(249,115,22,0.03)' : 'rgba(239,68,68,0.03)' }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full blur-[100px]" 
         />
       </div>
 
@@ -188,15 +189,21 @@ export default function App() {
         {scrolled && (
           <motion.div 
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent"
+            animate={{ 
+              opacity: 1,
+              backgroundImage: `linear-gradient(to right, transparent, ${heroImageIdx === 0 ? 'rgba(234,88,12,0.3)' : 'rgba(220,38,38,0.3)'}, transparent)` 
+            }}
+            className="absolute bottom-[-1px] left-0 right-0 h-[1px]"
           />
         )}
         <div className="container mx-auto px-6 flex justify-between items-center relative">
           <div className="flex items-center gap-2 group cursor-pointer z-[120]">
-            <div className="w-8 h-8 bg-gradient-to-tr from-orange-600 to-red-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(234,88,12,0.3)]">
+            <motion.div 
+              animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to top right, #ea580c, #ef4444)' : 'linear-gradient(to top right, #dc2626, #f97316)', boxShadow: heroImageIdx === 0 ? '0 0 20px rgba(234,88,12,0.3)' : '0 0 20px rgba(220,38,38,0.3)' }}
+              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+            >
               <div className="w-4 h-4 bg-white rounded-full" />
-            </div>
+            </motion.div>
             <span className="text-xl font-bold tracking-tight font-display text-white">SALVA</span>
           </div>
 
@@ -204,7 +211,17 @@ export default function App() {
             {['Home', 'Planos', 'Por que Salva', 'Diferenciais', 'Contato'].map((item) => (
               <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`} className="hover:text-white transition-colors relative group">
                 {item === 'Home' ? (
-                  <span className="px-5 py-2 bg-orange-600/20 border border-orange-500/30 text-orange-500 rounded-full font-semibold shadow-[0_0_15px_rgba(234,88,12,0.1)] transition-transform hover:scale-105 active:scale-95 block">Solicitar Diagnóstico</span>
+                  <motion.span 
+                    animate={{ 
+                      backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)',
+                      borderColor: heroImageIdx === 0 ? 'rgba(249,115,22,0.3)' : 'rgba(239,68,68,0.3)',
+                      color: heroImageIdx === 0 ? '#f97316' : '#ef4444',
+                      boxShadow: heroImageIdx === 0 ? '0 0 15px rgba(234,88,12,0.1)' : '0 0 15px rgba(220,38,38,0.1)'
+                    }}
+                    className="px-5 py-2 border rounded-full font-semibold transition-transform hover:scale-105 active:scale-95 block"
+                  >
+                    Solicitar Diagnóstico
+                  </motion.span>
                 ) : item}
               </a>
             ))}
@@ -247,17 +264,25 @@ export default function App() {
             >
               <div className="space-y-8">
                 {['Home', 'Planos', 'Por que Salva', 'Diferenciais', 'Contato'].map((item, i) => (
-                  <motion.a
+            <motion.span
                     initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     key={item}
-                    href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-4xl font-bold font-display hover:text-orange-500 transition-colors"
+                    className="block text-4xl font-bold font-display transition-colors"
+                    animate={{ 
+                      opacity: 1, 
+                      x: 0,
+                      color: '#ffffff'
+                    }}
+                    whileHover={{ color: heroImageIdx === 0 ? '#f97316' : '#ef4444' }}
                   >
-                    {item === 'Home' ? 'Diagnóstico' : item}
-                  </motion.a>
+                    <a
+                      href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item === 'Home' ? 'Diagnóstico' : item}
+                    </a>
+                  </motion.span>
                 ))}
               </div>
               
@@ -288,9 +313,9 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full w-fit mb-8 group transition-all hover:border-orange-500/30 mx-auto lg:ml-0">
-              <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_8px_#f97316]" />
-              <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 group-hover:text-orange-400 transition-colors">Estratégia Digital & Automação</span>
+            <div className={`flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full w-fit mb-8 group transition-all mx-auto lg:ml-0 ${heroImageIdx === 0 ? 'hover:border-orange-500/30' : 'hover:border-red-500/30'}`}>
+              <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#f97316' : '#ef4444', boxShadow: `0 0 8px ${heroImageIdx === 0 ? '#f97316' : '#ef4444'}` }} className="w-1.5 h-1.5 rounded-full" />
+              <motion.span animate={{ color: heroImageIdx === 0 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.5)' }} whileHover={{ color: heroImageIdx === 0 ? '#fb923c' : '#f87171' }} className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50 transition-colors">Estratégia Digital & Automação</motion.span>
             </div>
 
             <motion.h1 
@@ -305,7 +330,7 @@ export default function App() {
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 + (i * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className={`block ${i === 1 ? 'text-white/40' : i === 2 ? 'text-orange-600 drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]' : ''}`}
+                  className={`block ${i === 1 ? 'text-white/40' : i === 2 ? (heroImageIdx === 0 ? 'text-orange-600 drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]' : 'text-red-600 drop-shadow-[0_0_30px_rgba(220,38,38,0.4)]') : ''}`}
                 >
                   {text}
                 </motion.span>
@@ -317,9 +342,10 @@ export default function App() {
             </p>
 
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(234, 88, 12, 0.4)" }}
+              whileHover={{ scale: 1.05, boxShadow: heroImageIdx === 0 ? "0 0 40px rgba(234, 88, 12, 0.4)" : "0 0 40px rgba(220, 38, 38, 0.4)" }}
               whileTap={{ scale: 0.95 }}
-              className="group relative flex items-center gap-4 px-8 md:px-10 py-4 md:py-5 bg-gradient-to-r from-orange-600 to-orange-500 rounded-full overflow-hidden shadow-[0_0_25px_rgba(234,88,12,0.3)] mx-auto lg:ml-0"
+              animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to right, #ea580c, #f97316)' : 'linear-gradient(to right, #dc2626, #ef4444)' }}
+              className={`group relative flex items-center gap-4 px-8 md:px-10 py-4 md:py-5 rounded-full overflow-hidden mx-auto lg:ml-0 shadow-[0_0_25px_rgba(0,0,0,0.3)]`}
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <span className="font-bold text-base md:text-lg">Quero começar já</span>
@@ -351,8 +377,8 @@ export default function App() {
                     referrerPolicy="no-referrer"
                   />
                 </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-transparent opacity-70" />
+                <motion.div animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to top, #050505, rgba(5,5,5,0.2), transparent)' : 'linear-gradient(to top, #050505, rgba(5,5,5,0.2), transparent)' }} className="absolute inset-0" />
+                <motion.div animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to right, #050505, transparent, transparent)' : 'linear-gradient(to right, #050505, transparent, transparent)' }} className="absolute inset-0 opacity-70" />
                 
                 {/* Statistics Cards - Floating Style */}
                 <motion.div 
@@ -364,7 +390,7 @@ export default function App() {
                 >
                   <div className="flex items-center justify-between mb-6">
                     <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30">Motor de Escala</p>
-                    <Zap className="w-5 h-5 text-orange-500" />
+                    <Zap className={`w-5 h-5 ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`} />
                   </div>
                   <div className="space-y-6">
                     <div>
@@ -400,9 +426,9 @@ export default function App() {
               >
                 <h2 className="text-5xl md:text-8xl font-bold font-display tracking-tighter leading-tight mb-8">
                   A Nova <br />
-                  <span className="text-orange-600">Realidade.</span>
+                  <motion.span animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}>Realidade.</motion.span>
                 </h2>
-                <div className="h-1 w-24 bg-gradient-to-r from-orange-600 to-transparent mb-8" />
+                <motion.div animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to right, #ea580c, transparent)' : 'linear-gradient(to right, #dc2626, transparent)' }} className="h-1 w-24 mb-8" />
                 <p className="text-xl text-white/40 font-light leading-relaxed max-w-md">
                   Não é apenas sobre fazer mais. É sobre ser <span className="text-white">estratégico</span> enquanto a tecnologia trabalha para você.
                 </p>
@@ -418,10 +444,10 @@ export default function App() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.2 }}
                     key={i}
-                    className="flex items-center gap-6 p-6 md:p-8 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/[0.05] hover:border-orange-500/30 transition-all group"
+                    className={`flex items-center gap-6 p-6 md:p-8 bg-white/[0.02] border border-white/5 rounded-3xl transition-all group hover:bg-white/[0.05] ${heroImageIdx === 0 ? 'hover:border-orange-500/30' : 'hover:border-red-500/30'}`}
                   >
-                    <div className="w-14 h-14 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform">
-                      <item.icon className="w-6 h-6 text-orange-500" />
+                    <div className={`w-14 h-14 ${heroImageIdx === 0 ? 'bg-orange-600/10' : 'bg-red-600/10'} rounded-2xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform`}>
+                      <item.icon className={`w-6 h-6 ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`} />
                     </div>
                     <div>
                       <h4 className="text-xl font-bold font-display mb-1">{item.title}</h4>
@@ -435,7 +461,10 @@ export default function App() {
             {/* Cinematic Floating Cards - Improved for Mobile */}
             <div className="relative h-[450px] md:h-[700px] flex items-center justify-center w-full max-w-full overflow-hidden md:overflow-visible">
               {/* Central Energy Core */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 md:w-64 h-48 md:h-64 bg-orange-600/20 blur-[80px] md:blur-[100px] rounded-full animate-pulse" />
+              <motion.div 
+                animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)' }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 md:w-64 h-48 md:h-64 blur-[80px] md:blur-[100px] rounded-full animate-pulse" 
+              />
               
               <div className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-md h-full flex flex-col md:block items-center justify-center gap-8 perspective-[2000px]">
                 {/* Card: Libertar */}
@@ -446,13 +475,13 @@ export default function App() {
                   whileHover={{ rotateX: 0, rotateY: 0, scale: 1.05, translateZ: 50 }}
                   className="static md:absolute md:-top-20 md:-left-12 z-20 w-full md:w-[320px] aspect-[16/10] md:aspect-[4/5] bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] p-8 flex flex-col justify-between shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <motion.div animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to bottom right, rgba(234,88,12,0.2), transparent)' : 'linear-gradient(to bottom right, rgba(220,38,38,0.2), transparent)' }} className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   <div className="relative z-10">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-600/20 rounded-xl flex items-center justify-center mb-4 md:mb-6">
-                      <Timer className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
-                    </div>
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)' }} className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mb-4 md:mb-6">
+                      <Timer className={`w-5 h-5 md:w-6 md:h-6 ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`} />
+                    </motion.div>
                     <p className="text-3xl md:text-5xl font-bold font-display leading-none tracking-tighter mb-2 md:mb-4">Libertar</p>
-                    <div className="h-px w-10 md:w-12 bg-orange-600 mb-4" />
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="h-px w-10 md:w-12 mb-4" />
                     <p className="text-[10px] md:text-sm text-white/40 uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">Processos Autônomos</p>
                   </div>
                   <div className="relative z-10 flex items-center justify-between text-[8px] md:text-[10px] text-white/20 font-bold tracking-widest uppercase">
@@ -469,13 +498,13 @@ export default function App() {
                   whileHover={{ rotateX: 0, rotateY: 0, scale: 1.05, translateZ: 50 }}
                   className="static md:absolute md:-bottom-20 md:-right-12 z-10 w-full md:w-[320px] aspect-[16/10] md:aspect-[4/5] bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] p-8 flex flex-col justify-between shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-tl from-red-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <motion.div animate={{ background: heroImageIdx === 0 ? 'linear-gradient(to top left, rgba(234,88,12,0.2), transparent)' : 'linear-gradient(to top left, rgba(220,38,38,0.2), transparent)' }} className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   <div className="relative z-10">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-red-600/20 rounded-xl flex items-center justify-center mb-4 md:mb-6">
-                      <Rocket className="w-5 h-5 md:w-6 md:h-6 text-red-500" />
-                    </div>
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)' }} className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mb-4 md:mb-6">
+                      <Rocket className={`w-5 h-5 md:w-6 md:h-6 ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`} />
+                    </motion.div>
                     <p className="text-3xl md:text-5xl font-bold font-display leading-none tracking-tighter mb-2 md:mb-4">Multiplicar</p>
-                    <div className="h-px w-10 md:w-12 bg-red-600 mb-4" />
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="h-px w-10 md:w-12 mb-4" />
                     <p className="text-[10px] md:text-sm text-white/40 uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">ROI Exponencial</p>
                   </div>
                   <div className="relative z-10 flex items-center justify-between text-[8px] md:text-[10px] text-white/20 font-bold tracking-widest uppercase">
@@ -499,7 +528,7 @@ export default function App() {
                 whileInView={{ opacity: 1, x: 0 }}
                 className="flex items-center gap-2 mb-6"
               >
-                <div className="w-2 h-2 bg-orange-500 rounded-full" />
+                <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="w-2 h-2 rounded-full" />
                 <span className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] font-bold text-white/40">Nosso Arsenal Digital</span>
               </motion.div>
               <motion.h2 
@@ -509,7 +538,7 @@ export default function App() {
                 className="text-4xl md:text-7xl font-bold font-display tracking-tight leading-[1.1]"
               >
                 Projetos que <br />
-                <span className="text-orange-600 italic">Redefinem</span> o Jogo.
+                <motion.span animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="italic">Redefinem</motion.span> o Jogo.
               </motion.h2>
             </div>
             <motion.div
@@ -569,9 +598,9 @@ export default function App() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-0 transition-opacity duration-700" />
                   
                   <div className="absolute bottom-8 left-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                    <div className="px-3 py-1 bg-orange-600 rounded-full text-[10px] font-black uppercase tracking-widest text-white">
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white">
                       {work.stats}
-                    </div>
+                    </motion.div>
                   </div>
 
                   <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-y-4 group-hover:translate-y-0">
@@ -582,10 +611,10 @@ export default function App() {
                 </div>
                 <div className="px-4">
                   <div className="flex items-center gap-4 mb-2">
-                    <div className="h-px w-8 bg-orange-600/50" />
+                    <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.5)' : 'rgba(220,38,38,0.5)' }} className="h-px w-8" />
                     <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em]">{work.category}</p>
                   </div>
-                  <h3 className="text-3xl font-bold font-display group-hover:text-orange-500 transition-colors tracking-tight">{work.title}</h3>
+                  <motion.h3 whileHover={{ color: heroImageIdx === 0 ? '#f97316' : '#ef4444' }} className="text-3xl font-bold font-display transition-colors tracking-tight">{work.title}</motion.h3>
                 </div>
               </motion.div>
             ))}
@@ -602,7 +631,10 @@ export default function App() {
       {/* Why SALVA Section (Bento Grid Redesign) */}
       <section className="py-24 md:py-48 relative overflow-hidden bg-[#0a0a0a]" id="por-que-salva">
         {/* Decorative background elements */}
-        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-orange-600/5 blur-[150px] rounded-full pointer-events-none -translate-x-1/2" />
+            <motion.div
+               animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.05)' : 'rgba(220,38,38,0.05)' }}
+               className="absolute top-1/2 left-0 w-[500px] h-[500px] blur-[150px] rounded-full pointer-events-none -translate-x-1/2" 
+            />
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 md:mb-24">
@@ -615,15 +647,15 @@ export default function App() {
               <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] font-bold text-white/50">O Diferencial SALVA</span>
             </motion.div>
             
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-7xl font-bold font-display mb-8 max-w-4xl mx-auto leading-[1.1] tracking-tight"
-            >
-              A Precisão da <span className="text-orange-600">Psicologia</span> <br className="hidden md:block" />
-              encontra a <span className="text-white/40 italic">Alta Tecnologia.</span>
-            </motion.h2>
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-4xl md:text-7xl font-bold font-display mb-8 max-w-4xl mx-auto leading-[1.1] tracking-tight"
+                  >
+                    A Precisão da <motion.span animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}>Psicologia</motion.span> <br className="hidden md:block" />
+                    encontra a <span className="text-white/40 italic">Alta Tecnologia.</span>
+                  </motion.h2>
             
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -718,11 +750,11 @@ export default function App() {
             
             <div className="flex flex-col items-center md:items-start group">
                <div className="flex items-center gap-2 mb-2">
-                 <TrendingUp className="w-3 h-3 text-orange-500" />
+                 <TrendingUp className={`w-3 h-3 ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`} />
                  <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/30 group-hover:text-white transition-colors">Conversão em Contratos</p>
                </div>
-               <p className="text-4xl md:text-6xl font-bold font-display tracking-tighter text-orange-600">32.8%</p>
-               <div className="w-12 h-0.5 bg-orange-600 mt-2 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+               <motion.p animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="text-4xl md:text-6xl font-bold font-display tracking-tighter">32.8%</motion.p>
+               <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="w-12 h-0.5 mt-2 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
             </div>
             
             <div className="hidden md:block w-[1px] h-20 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
@@ -802,12 +834,12 @@ export default function App() {
                   className="group flex flex-col md:flex-row gap-8 items-start"
                 >
                   <div className="flex-shrink-0">
-                    <span className="text-7xl md:text-8xl font-black font-display text-white/5 group-hover:text-orange-500/20 transition-colors duration-700">{step.num}</span>
+                    <motion.span animate={{ color: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)' }} className="text-7xl md:text-8xl font-black font-display text-white/5 transition-colors duration-700">{step.num}</motion.span>
                   </div>
                   <div className="pt-4 md:pt-12">
-                    <h3 className="text-3xl md:text-4xl font-bold font-display mb-4 flex items-center gap-4 group-hover:text-orange-500 transition-colors">
+                    <motion.h3 whileHover={{ color: heroImageIdx === 0 ? '#f97316' : '#ef4444' }} className="text-3xl md:text-4xl font-bold font-display mb-4 flex items-center gap-4 transition-colors">
                       {step.title}
-                    </h3>
+                    </motion.h3>
                     <p className="text-lg md:text-xl text-white/40 leading-relaxed max-w-xl group-hover:text-white/60 transition-colors">
                       {step.desc}
                     </p>
@@ -823,10 +855,15 @@ export default function App() {
       <section className="py-20 md:py-40 relative z-20" id="planos">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 md:mb-24 px-4">
-            <h2 className="text-4xl sm:text-5xl md:text-[6rem] font-bold font-display tracking-tight leading-none mb-6">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl sm:text-5xl md:text-[6rem] font-bold font-display tracking-tight leading-none mb-6"
+            >
               Acelere Seu <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-500">Crescimento</span>
-            </h2>
+              <motion.span animate={{ backgroundImage: heroImageIdx === 0 ? 'linear-gradient(to right, #ea580c, #ef4444)' : 'linear-gradient(to right, #dc2626, #f97316)' }} className="text-transparent bg-clip-text">Crescimento</motion.span>
+            </motion.h2>
             <p className="text-white/40 uppercase tracking-[0.3em] md:tracking-[0.4em] font-bold text-[10px] md:text-sm">Passo a Passo Para o Próximo Nível</p>
           </div>
 
@@ -840,9 +877,10 @@ export default function App() {
                 transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
                 className={`flex flex-col p-8 md:p-14 rounded-[3.5rem] border transition-all duration-700 relative overflow-hidden group ${
                   plan.highlight 
-                    ? 'bg-gradient-to-b from-orange-600 to-red-600 border-none shadow-[0_50px_100px_rgba(234,88,12,0.3)]' 
-                    : 'bg-white/[0.02] backdrop-blur-3xl border-white/5 hover:border-orange-500/40 hover:bg-white/[0.05]'
+                    ? `border-none shadow-[0_50px_100px_rgba(${heroImageIdx === 0 ? '234,88,12' : '220,38,38'},0.3)]` 
+                    : `bg-white/[0.02] backdrop-blur-3xl border-white/5 hover:bg-white/[0.05] ${heroImageIdx === 0 ? 'hover:border-orange-500/40' : 'hover:border-red-500/40'}`
                 }`}
+                animate={{ background: plan.highlight ? (heroImageIdx === 0 ? 'linear-gradient(to bottom, #ea580c, #ef4444)' : 'linear-gradient(to bottom, #dc2626, #f97316)') : 'rgba(255,255,255,0.02)' }}
               >
                 {/* Spotlight Cursor Effect (Simulated via hover classes) */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--mouse-x,50%)_var(--mouse-y,50%),rgba(255,255,255,0.08),transparent_80%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -922,13 +960,18 @@ export default function App() {
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  className="inline-block px-4 py-2 bg-orange-600/20 border border-orange-500/30 rounded-full mb-6 md:mb-8 font-bold text-[10px] tracking-widest text-orange-400 uppercase"
+                  animate={{ 
+                    backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.2)' : 'rgba(220,38,38,0.2)',
+                    borderColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.3)' : 'rgba(220,38,38,0.3)'
+                  }}
+                  className="inline-block px-4 py-2 border rounded-full mb-6 md:mb-8 font-bold text-[10px] tracking-widest uppercase transition-colors"
+                  style={{ color: heroImageIdx === 0 ? '#f97316' : '#ef4444' }}
                 >
                   Oportunidade Única
                 </motion.div>
                 <h2 className="text-4xl md:text-7xl font-bold font-display tracking-tighter leading-[1.1] mb-6 md:mb-12">
                   Um Convite <br className="hidden md:block" />
-                  à <span className="text-orange-600">Exclusividade.</span>
+                  à <motion.span animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}>Exclusividade.</motion.span>
                 </h2>
                 <p className="text-base md:text-xl text-white/40 max-w-md font-light mb-8 md:mb-16 mx-auto lg:ml-0 leading-relaxed">
                   Estamos selecionando apenas 5 novos parceiros este mês para garantir o padrão de entrega SALVA. Sua vez chegou.
@@ -936,34 +979,38 @@ export default function App() {
 
                 <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-sm mx-auto lg:ml-0">
                    <div className="space-y-1 md:space-y-2">
-                     <p className="text-[10px] md:text-xs font-bold text-orange-500 uppercase tracking-widest">Ativação</p>
+                     <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`}>Ativação</p>
                      <p className="text-xl md:text-3xl font-bold font-display">Imediata</p>
-                     <div className="h-px w-6 md:w-8 bg-orange-600/50" />
+                     <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.5)' : 'rgba(220,38,38,0.5)' }} className="h-px w-6 md:w-8" />
                    </div>
                    <div className="space-y-1 md:space-y-2">
-                     <p className="text-[10px] md:text-xs font-bold text-orange-500 uppercase tracking-widest">Garanta Sua</p>
+                     <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest ${heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500'}`}>Garanta Sua</p>
                      <p className="text-xl md:text-3xl font-bold font-display">Vaga</p>
-                     <div className="h-px w-6 md:w-8 bg-orange-600/50" />
+                     <motion.div animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.5)' : 'rgba(220,38,38,0.5)' }} className="h-px w-6 md:w-8" />
                    </div>
                 </div>
               </div>
 
               <div className="space-y-4 md:space-y-6">
                  {[
-                   { title: "Flexibilidade Premium", desc: "Concilie seu investimento em 12x.", icon: CreditCard, color: "white" },
-                   { title: "Prioridade PIX", desc: "10% de desconto e setup prioritário.", icon: Zap, color: "orange" }
+                   { title: "Flexibilidade Premium", desc: "Concilie seu investimento em 12x.", icon: CreditCard, type: "outline" },
+                   { title: "Prioridade PIX", desc: "10% de desconto e setup prioritário.", icon: Zap, type: "solid" }
                  ].map((box, i) => (
                    <motion.div 
                      key={i}
                      whileHover={{ scale: 1.02, x: 10 }}
-                     className={`p-6 md:p-12 ${box.color === 'orange' ? 'bg-orange-600' : 'bg-white/[0.03] backdrop-blur-3xl border border-white/10'} rounded-[2rem] md:rounded-[3rem] flex items-center gap-6 md:gap-8 shadow-2xl transition-all duration-500`}
+                     animate={{ 
+                       backgroundColor: box.type === "solid" ? (heroImageIdx === 0 ? '#ea580c' : '#dc2626') : 'rgba(255,255,255,0.03)',
+                       borderColor: box.type === "outline" ? 'rgba(255,255,255,0.1)' : 'transparent'
+                     }}
+                     className={`p-6 md:p-12 border backdrop-blur-3xl rounded-[2rem] md:rounded-[3rem] flex items-center gap-6 md:gap-8 shadow-2xl transition-all duration-500`}
                    >
-                    <div className={`w-12 h-12 md:w-16 md:h-16 ${box.color === 'orange' ? 'bg-white/20' : 'bg-white/5'} rounded-xl md:rounded-2xl flex items-center justify-center shrink-0`}>
-                      <box.icon className={`w-6 h-6 md:w-8 md:h-8 ${box.color === 'orange' ? 'text-white' : 'text-orange-500'}`} />
+                    <div className={`w-12 h-12 md:w-16 md:h-16 ${box.type === 'solid' ? 'bg-white/20' : 'bg-white/5'} rounded-xl md:rounded-2xl flex items-center justify-center shrink-0`}>
+                      <box.icon className={`w-6 h-6 md:w-8 md:h-8 ${box.type === 'solid' ? 'text-white' : (heroImageIdx === 0 ? 'text-orange-500' : 'text-red-500')}`} />
                     </div>
                     <div>
-                      <p className={`text-lg md:text-xl font-bold mb-1 md:mb-2 ${box.color === 'orange' ? 'text-white' : 'text-white'}`}>{box.title}</p>
-                      <p className={`text-[12px] md:text-sm ${box.color === 'orange' ? 'text-white/70' : 'text-white/40'}`}>{box.desc}</p>
+                      <p className="text-lg md:text-xl font-bold mb-1 md:mb-2 text-white">{box.title}</p>
+                      <p className={`text-[12px] md:text-sm ${box.type === 'solid' ? 'text-white/70' : 'text-white/40'}`}>{box.desc}</p>
                     </div>
                    </motion.div>
                  ))}
@@ -976,15 +1023,18 @@ export default function App() {
       {/* Final CTA Section - Cinematic Finale */}
       <section className="py-32 md:py-64 relative overflow-hidden bg-[#050505]" id="contato">
         {/* Massive Ambient Core */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-600/10 blur-[200px] rounded-full pointer-events-none animate-pulse" />
-        
+            <motion.div 
+              animate={{ backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.1)' : 'rgba(220,38,38,0.1)' }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[200px] rounded-full pointer-events-none animate-pulse" 
+            />
+            
         <div className="container mx-auto px-6 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}
           >
-            <p className="text-orange-600 font-bold uppercase tracking-[0.5em] text-xs md:text-sm mb-12">O Futuro Começa Agora</p>
+            <motion.p animate={{ color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="font-bold uppercase tracking-[0.5em] text-xs md:text-sm mb-12">O Futuro Começa Agora</motion.p>
             <h2 className="text-5xl sm:text-7xl md:text-[9rem] font-bold font-display tracking-tighter leading-[0.85] mb-16">
               Assuma o <br />
               <span className="text-white italic">Controle.</span>
@@ -995,10 +1045,12 @@ export default function App() {
                 whileHover={{ 
                   scale: 1.1, 
                   rotateX: 10,
-                  boxShadow: "0 0 100px rgba(234, 88, 12, 0.4)" 
+                  boxShadow: heroImageIdx === 0 ? "0 0 100px rgba(234, 88, 12, 0.4)" : "0 0 100px rgba(220, 38, 38, 0.4)" 
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-12 py-7 md:px-20 md:py-10 bg-orange-600 text-white font-black text-xl md:text-3xl rounded-full transition-all flex items-center justify-center gap-6 mx-auto group shadow-[0_30px_60px_rgba(234,88,12,0.3)]"
+                animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}
+                className="px-12 py-7 md:px-20 md:py-10 text-white font-black text-xl md:text-3xl rounded-full transition-all flex items-center justify-center gap-6 mx-auto group"
+                style={{ boxShadow: heroImageIdx === 0 ? '0 30px_60px_rgba(234,88,12,0.3)' : '0 30px_60px_rgba(220,38,38,0.3)' }}
               >
                 Inicie Sua Evolução
                 <div className="w-10 h-10 md:w-14 md:h-14 bg-white/20 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
@@ -1038,13 +1090,17 @@ export default function App() {
                 <p className="text-white/40 leading-relaxed max-w-xs mb-10">
                   Engenharia Social & Estratégia Digital para negócios que buscam liberdade e escala absoluta.
                 </p>
-                <div className="flex gap-4">
-                  {['IG', 'LN', 'YT', 'TW'].map(s => (
-                    <div key={s} className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center hover:border-orange-500/50 hover:bg-orange-500/10 transition-all cursor-pointer text-xs font-bold text-white/40 hover:text-orange-500">
-                      {s}
-                    </div>
-                  ))}
-                </div>
+                  <div className="flex gap-4">
+                   {['IG', 'LN', 'YT', 'TW'].map(s => (
+                     <motion.div 
+                       key={s} 
+                       whileHover={{ borderColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.5)' : 'rgba(220,38,38,0.5)', backgroundColor: heroImageIdx === 0 ? 'rgba(234,88,12,0.1)' : 'rgba(220,38,38,0.1)', color: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }}
+                       className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center transition-all cursor-pointer text-xs font-bold text-white/40"
+                     >
+                       {s}
+                     </motion.div>
+                   ))}
+                  </div>
              </div>
              
              <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-12">
@@ -1069,10 +1125,10 @@ export default function App() {
                 <div className="col-span-2 md:col-span-1 space-y-6">
                    <p className="text-[10px] uppercase tracking-[0.4em] font-black text-white">Newsletter VIP</p>
                    <div className="flex gap-2">
-                      <input className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs w-full focus:outline-none focus:border-orange-500/50" placeholder="Seu melhor e-mail" />
-                      <button className="p-3 bg-orange-600 rounded-xl hover:bg-orange-500 transition-colors">
+                      <input className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs w-full focus:outline-none ${heroImageIdx === 0 ? 'focus:border-orange-500/50' : 'focus:border-red-500/50'}`} placeholder="Seu melhor e-mail" />
+                      <motion.button animate={{ backgroundColor: heroImageIdx === 0 ? '#ea580c' : '#dc2626' }} className="p-3 rounded-xl hover:opacity-90 transition-all">
                         <ArrowRight className="w-4 h-4" />
-                      </button>
+                      </motion.button>
                    </div>
                 </div>
              </div>
